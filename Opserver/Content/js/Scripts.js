@@ -544,6 +544,34 @@ Status.Dashboard.Server = (function () {
             });
             return false;
         });
+
+        $(document).on('click', '.js-node-poll', function () {
+            var link = $(this);
+            if (link.hasClass('active')) return;
+            link.addClass('active');
+            link.find('.fa').addClass('fa-spin');
+            link.find('.js-text').text('Polling...');
+            Status.refresh.pause();
+            $.ajax(Status.options.rootPath + 'dashboard/node/poll', {
+                type: 'POST',
+                data: {
+                    node: link.closest('[data-name]').data('name')
+                },
+                success: function (data, status, xhr) {
+                    if (data.Success === true) {
+                        Status.refresh.resume();
+                        //Status.refresh.run('Dashboard');  TODO: Do we need this?
+                        window.location.reload(true);
+                    } else {
+                        link.text('Polling Error: ').errorPopupFromJSON(xhr, data.Message);
+                    }
+                },
+                error: function (xhr) {
+                    link.text('Polling Error: ').errorPopupFromJSON(xhr, data.Message);
+                }
+            });
+            return false;
+        });
     }
     
     function liveDashboard(startValue) {

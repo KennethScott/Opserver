@@ -35,6 +35,7 @@
     }
     <span class="pull-right small" title="@if (s.PollIntervalSeconds.HasValue){<text>Polling Interval: @(s.PollInterval?.ToReadableString())</text>}">
         As of @s.LastUpdatedSpan()
+        <a href="#" class="pull-right hover-pulsate js-node-poll" data-name="@s.Name.ToString()">@Icon.Refresh <span class="js-text">Poll Now</span></a>
     </span>
 </h5>
 <div class="row small">
@@ -146,8 +147,8 @@
     </div>
 </div>
 @helper SubnavItem(CurrentStatusTypes st, string url, bool isExternal = true)
-{
-    <li class="@(Model.CurrentStatusType == st ? "active" : "")@(isExternal ? " exit-link" : null)"><a href="@url">@st.AsString(EnumFormat.Description)</a></li>
+    {
+        <li class="@(Model.CurrentStatusType == st ? "active" : "")@(isExternal ? " exit-link" : null)"><a href="@url">@st.AsString(EnumFormat.Description)</a></li>
 }
 @if (Model.StatusTypes.Count() > 1)
 { // only show nav if there's actual nav - save the vertical space on stats-only nodes
